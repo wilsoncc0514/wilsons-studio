@@ -24,6 +24,13 @@ export function Navigation({ lang }: { lang: Locale }) {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, []);
 
   const active = (href: string) => href === `/${lang}` ? pathname === href : pathname.startsWith(href);
 
@@ -36,10 +43,10 @@ export function Navigation({ lang }: { lang: Locale }) {
       <div className="actions">
         <ThemeToggle />
         <Link className="lang" href={otherPath}>{other.toUpperCase()}</Link>
-        <button className={`menu-button ${open ? "open" : ""}`} onClick={() => setOpen(v => !v)} aria-expanded={open} aria-label={open ? "Close menu" : "Open menu"}><span/><span/></button>
+        <button className={`menu-button ${open ? "open" : ""}`} onClick={() => setOpen(v => !v)} aria-expanded={open} aria-controls="mobile-navigation" aria-label={open ? "Close menu" : "Open menu"}><span/><span/></button>
       </div>
     </div>
-    <div className={`mobile-menu ${open ? "open" : ""}`} aria-hidden={!open}>
+    <div id="mobile-navigation" className={`mobile-menu ${open ? "open" : ""}`} aria-hidden={!open}>
       <nav>{items.map(([label, href], i) => <Link style={{ "--delay": `${i * 45}ms` } as React.CSSProperties} className={active(href) ? "active" : ""} href={href} key={href}>{label}<span>0{i + 1}</span></Link>)}</nav>
     </div>
   </header>;
