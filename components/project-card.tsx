@@ -1,0 +1,2 @@
+import Link from "next/link"; import Image from "next/image"; import { categoryNames,type Locale,type Project } from "@/data/projects";
+export function ProjectCard({project,lang}:{project:Project;lang:Locale}){return <Link className="project" href={`/${lang}/portfolio/${project.slug}`}><Image src={project.coverImage} alt={project.title[lang]} width={1200} height={900}/><div className="meta"><div><h3>{project.title[lang]}</h3><p>{categoryNames[project.category][lang]} · {project.year}</p></div><span className="arrow">↗</span></div></Link>}
