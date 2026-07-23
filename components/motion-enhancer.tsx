@@ -1,22 +1,104 @@
 "use client";
 
-import { useEffect } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
 import { usePathname } from "next/navigation";
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export function MotionEnhancer() {
   const pathname = usePathname();
-  useEffect(() => {
+
+  useGSAP(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
-    const nodes = document.querySelectorAll(".sectionhead, .project, .cap, .aboutband, .pagehead > *, .story, .gallery img, .about-intro > *, .about-columns > *, .skill-list > div, .process-grid > article, .about-contact > *");
-    nodes.forEach((node, index) => {
-      node.classList.add("reveal");
-      (node as HTMLElement).style.setProperty("--reveal-delay", `${Math.min(index % 4, 3) * 70}ms`);
+
+    const desktop = window.matchMedia("(min-width: 801px) and (pointer: fine)").matches;
+    const lenis = desktop ? new Lenis({
+      anchors: { offset: -90 },
+      autoRaf: true,
+      lerp: 0.09,
+      smoothWheel: true,
+      stopInertiaOnNavigate: true,
+      wheelMultiplier: 0.9,
+    }) : null;
+
+    lenis?.on("scroll", ScrollTrigger.update);
+
+    const intro = document.querySelectorAll(".hero .eyebrow, .hero h1, .hero p, .hero .cta, .pagehead > .eyebrow, .pagehead > h1, .pagehead > p");
+    gsap.fromTo(intro,
+      { autoAlpha: 0, y: 34 },
+      { autoAlpha: 1, y: 0, duration: 0.9, stagger: 0.09, ease: "power3.out", clearProps: "transform,opacity,visibility" }
+    );
+
+    const revealGroups = document.querySelectorAll(
+      ".sectionhead, .aboutband, .story, .about-intro > *, .about-columns > *, .about-contact > *"
+    );
+    revealGroups.forEach((node) => {
+      gsap.fromTo(node,
+        { autoAlpha: 0, y: 38 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.85,
+          ease: "power3.out",
+          scrollTrigger: { trigger: node, start: "top 88%", once: true },
+        }
+      );
     });
-    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
-      if (entry.isIntersecting) { entry.target.classList.add("visible"); observer.unobserve(entry.target); }
-    }), { threshold: 0.12, rootMargin: "0px 0px -40px" });
-    nodes.forEach(node => observer.observe(node));
+
+    document.querySelectorAll(".grid, .capgrid, .skill-list, .process-grid, .gallery").forEach((group) => {
+      const children = Array.from(group.children);
+      if (!children.length) return;
+      gsap.fromTo(children,
+        { autoAlpha: 0, y: 34 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.08,
+          ease: "power3.out",
+          scrollTrigger: { trigger: group, start: "top 88%", once: true },
+        }
+      );
+    });
+
+    if (desktop) {
+      document.querySelectorAll<HTMLElement>(".project").forEach((card) => {
+        const image = card.querySelector("img");
+        if (!image) return;
+        gsap.fromTo(image,
+          { yPercent: -3, scale: 1.06 },
+          {
+            yPercent: 3,
+            scale: 1.01,
+            ease: "none",
+            scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: 0.7 },
+          }
+        );
+      });
+
+      const detailImage = document.querySelector(".detailhero > img");
+      if (detailImage) {
+        gsap.fromTo(detailImage,
+          { yPercent: -2, scale: 1.04 },
+          {
+            yPercent: 2,
+            scale: 1,
+            ease: "none",
+            scrollTrigger: { trigger: detailImage, start: "top top+=80", end: "bottom top", scrub: 0.8 },
+          }
+        );
+      }
+    }
+
+    gsap.to(".scroll-progress", {
+      scaleX: 1,
+      ease: "none",
+      scrollTrigger: { start: 0, end: "max", scrub: 0.15 },
+    });
 
     const cards = document.querySelectorAll<HTMLElement>(".project, .cap, .process-grid article");
     const move = (event: Event) => {
@@ -26,14 +108,14 @@ export function MotionEnhancer() {
       card.style.setProperty("--mx", `${e.clientX - rect.left}px`);
       card.style.setProperty("--my", `${e.clientY - rect.top}px`);
     };
-    const onScroll = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      document.documentElement.style.setProperty("--scroll-progress", `${max > 0 ? window.scrollY / max : 0}`);
+    if (desktop) cards.forEach(card => card.addEventListener("pointermove", move));
+    ScrollTrigger.refresh();
+
+    return () => {
+      lenis?.destroy();
+      cards.forEach(card => card.removeEventListener("pointermove", move));
     };
-    cards.forEach(card => card.addEventListener("pointermove", move));
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => { observer.disconnect(); cards.forEach(card => card.removeEventListener("pointermove", move)); window.removeEventListener("scroll", onScroll); };
-  }, [pathname]);
+  }, { dependencies: [pathname], revertOnUpdate: true });
+
   return <div className="scroll-progress" aria-hidden="true"/>;
 }
