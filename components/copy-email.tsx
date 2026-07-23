@@ -33,9 +33,13 @@ export function CopyEmail({ lang }: { lang: Locale }) {
   return <div className="email-row">
     <span className="email-icon" aria-hidden="true">✉️</span>
     <span className="contact-email">{email}</span>
-    <button className={`copy-button ${copied ? "copied" : ""}`} onClick={copy} aria-live="polite">
-      <span>{copied ? "✓" : "⧉"}</span>
-      {copied ? (lang === "zh" ? "已复制" : "Copied") : (lang === "zh" ? "复制" : "Copy")}
+    <button
+      className={`copy-button ${copied ? "copied" : ""}`}
+      onClick={copy}
+      aria-label={copied ? (lang === "zh" ? "邮箱已复制" : "Email copied") : (lang === "zh" ? "复制邮箱" : "Copy email")}
+      title={copied ? (lang === "zh" ? "已复制" : "Copied") : (lang === "zh" ? "复制邮箱" : "Copy email")}
+    >
+      <span aria-hidden="true">{copied ? "✓" : "⧉"}</span>
     </button>
   </div>;
 }
