@@ -41,5 +41,8 @@ export function CopyEmail({ lang }: { lang: Locale }) {
     >
       <span aria-hidden="true">{copied ? "✓" : "⧉"}</span>
     </button>
+    <span className="sr-only" role="status" aria-live="polite">
+      {copied ? (lang === "zh" ? "邮箱已复制" : "Email copied") : ""}
+    </span>
   </div>;
 }

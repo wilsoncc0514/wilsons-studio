@@ -11,7 +11,7 @@ const content = {
     process: "我的创作方式",
     processItems: [["理解","梳理项目背景、受众和应用场景，明确真正需要解决的问题。"],["探索","通过情绪板、构图和生成实验，寻找最有潜力的视觉方向。"],["精修","统一光影、色彩与细节，让概念成为稳定、完整的视觉成果。"]],
     contactTitle: "有合适的项目，欢迎联系。",
-    contactCopy: "无论是设计合作、视觉创作机会，还是关于 AI 与设计的交流，都欢迎发邮件给我。",
+    contactCopy: "无论是设计合作、视觉创作机会，还是关于创意与图像表达的交流，都欢迎发邮件给我。",
     status: "开放合作机会",
   },
   en: {
@@ -22,7 +22,7 @@ const content = {
     process: "How I Work",
     processItems: [["Understand","Clarify context, audience, and application to identify the real problem."],["Explore","Use moodboards, composition studies, and generation tests to find the strongest direction."],["Refine","Unify light, color, and detail until the concept becomes a reliable visual outcome."]],
     contactTitle: "Have the right project in mind? Let’s talk.",
-    contactCopy: "For design collaborations, visual commissions, or a conversation about AI and creativity, feel free to reach out by email.",
+    contactCopy: "For design collaborations, visual commissions, or a conversation about creative image-making, feel free to reach out by email.",
     status: "Open to collaborations",
   }
 };

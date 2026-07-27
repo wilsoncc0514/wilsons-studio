@@ -1,2 +1,22 @@
-import { notFound } from "next/navigation"; import { PortfolioGrid } from "@/components/portfolio-grid"; import { isLocale,ui } from "@/lib/i18n";
-export default async function Portfolio({params}:{params:Promise<{lang:string}>}){const {lang}=await params;if(!isLocale(lang))notFound();const t=ui[lang];return <><header className="pagehead shell"><div className="eyebrow">Selected archive</div><h1>{t.portfolio}</h1><p>{t.portfolioIntro}</p></header><section className="shell section" style={{paddingTop:0}}><PortfolioGrid lang={lang}/></section></>}
+import { notFound } from "next/navigation";
+import { PortfolioGrid } from "@/components/portfolio-grid";
+import { isLocale, ui } from "@/lib/i18n";
+
+export default async function Portfolio({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  if (!isLocale(lang)) notFound();
+  const t = ui[lang];
+
+  return (
+    <>
+      <header className="pagehead shell">
+        <div className="eyebrow">Selected archive</div>
+        <h1>{t.portfolio}</h1>
+        <p>{t.portfolioIntro}</p>
+      </header>
+      <section className="shell section portfolio-section">
+        <PortfolioGrid lang={lang}/>
+      </section>
+    </>
+  );
+}

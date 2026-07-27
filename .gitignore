@@ -13,6 +13,9 @@
 # testing
 /coverage
 
+# local design review tools
+/.agents/
+
 # next.js
 /.next/
 /.vinext/
