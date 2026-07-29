@@ -22,10 +22,6 @@ export function Navigation({ lang }: { lang: Locale }) {
   ];
 
   useEffect(() => {
-    document.documentElement.lang = lang;
-  }, [lang]);
-
-  useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     const main = document.querySelector("main");
     const footer = document.querySelector("footer");
