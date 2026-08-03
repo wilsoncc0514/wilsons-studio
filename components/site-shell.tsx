@@ -15,14 +15,13 @@ export function Footer({ lang }: { lang: Locale }) {
 
 export function Shell({ lang, children }: { lang: Locale; children: React.ReactNode }) {
   return (
-    <>
+    <MotionEnhancer>
       <a className="skip-link" href="#main-content">
         {lang === "zh" ? "跳到主要内容" : "Skip to main content"}
       </a>
       <Navigation lang={lang} />
-      <MotionEnhancer />
       <main id="main-content" tabIndex={-1}>{children}</main>
       <Footer lang={lang} />
-    </>
+    </MotionEnhancer>
   );
 }
