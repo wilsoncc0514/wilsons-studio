@@ -11,6 +11,9 @@ export const categoryNames:Record<string,LocalText> = {
   "commercial-cover":{zh:"商业封面",en:"Commercial Cover"},
   "photo-retouching":{zh:"修图案例",en:"Photo Retouching"}, "creative-tools":{zh:"创意工具",en:"Creative Tools"}
 };
+
+export const resolveProjectCategory = (category: string | null | undefined) =>
+  category && Object.hasOwn(categoryNames, category) ? category : "all";
 export const projects:Project[] = names.map((n,i)=>({
   slug:["new-brand-campaign","urban-culture-visual","natural-light-portrait","product-finish-study","moodboard-generator","smart-color-lab"][i],
   title:{zh:n[0],en:n[1]}, category:categories[Math.floor(i/2)],

@@ -6,7 +6,7 @@ export function Footer({ lang }: { lang: Locale }) {
   return (
     <footer className="footer shell">
       <div className="footerline">
-        <span>© 2026 Wilson’s Studio</span>
+        <span translate="no">© 2026 Wilson’s Studio</span>
         <span>{lang === "zh" ? "以想象力创造，因细节而完整。" : "Made with imagination. Finished with detail."}</span>
       </div>
     </footer>

@@ -48,7 +48,7 @@ export default async function About({ params }: { params: Promise<{ lang: string
 
     <section className="section shell">
       <div className="sectionhead"><div><div className="eyebrow">Expertise</div><h2>{c.capabilities}</h2></div><p className="sectiondesc">Wilson’s Studio · 2026</p></div>
-      <div className="skill-list">{skills.map((skill, i) => <div key={skill}><span>0{i + 1}</span><h3>{skill}</h3><i>↗</i></div>)}</div>
+      <div className="skill-list">{skills.map((skill, i) => <div key={skill}><span>0{i + 1}</span><h3>{skill}</h3></div>)}</div>
     </section>
 
     <section className="section shell">

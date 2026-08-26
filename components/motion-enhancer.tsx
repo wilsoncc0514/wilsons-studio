@@ -60,16 +60,14 @@ export function MotionEnhancer({ children }: MotionEnhancerProps) {
           {
             opacity: 0.35,
             y: desktop ? 28 : 14,
-            filter: desktop ? "blur(6px)" : "blur(0px)",
           },
           {
             opacity: 1,
             y: 0,
-            filter: "blur(0px)",
             duration: desktop ? 0.78 : 0.52,
             stagger: desktop ? 0.075 : 0.04,
             ease: "power3.out",
-            clearProps: "transform,opacity,filter",
+            clearProps: "transform,opacity",
           },
         );
 

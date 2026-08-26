@@ -1,32 +1,47 @@
-"use client";
-
-import { useState } from "react";
+import Link from "next/link";
 import { categoryNames, projects, type Locale } from "@/data/projects";
 import { ui } from "@/lib/i18n";
 import { ProjectCard } from "./project-card";
 
-export function PortfolioGrid({ lang }: { lang: Locale }) {
-  const [filter, setFilter] = useState("all");
-  const visible = filter === "all" ? projects : projects.filter(project => project.category === filter);
+export function PortfolioGrid({ lang, filter }: { lang: Locale; filter: string }) {
+  const visible = filter === "all"
+    ? projects
+    : projects.filter((project) => project.category === filter);
+  const portfolioPath = `/${lang}/portfolio`;
+
   return <>
-    <div className="filters" role="group" aria-label={lang === "zh" ? "作品分类" : "Project categories"}>
-      <button className={`chip ${filter === "all" ? "active" : ""}`} aria-pressed={filter === "all"} onClick={() => setFilter("all")}>{ui[lang].all}</button>
+    <nav className="filters" aria-label={lang === "zh" ? "作品分类" : "Project categories"}>
+      <Link
+        className={`chip ${filter === "all" ? "active" : ""}`}
+        href={portfolioPath}
+        aria-current={filter === "all" ? "page" : undefined}
+        scroll={false}
+      >
+        {ui[lang].all}
+      </Link>
       {Object.entries(categoryNames).map(([key, value]) => (
-        <button
+        <Link
           className={`chip ${filter === key ? "active" : ""}`}
-          aria-pressed={filter === key}
-          onClick={() => setFilter(key)}
+          href={{ pathname: portfolioPath, query: { category: key } }}
+          aria-current={filter === key ? "page" : undefined}
+          scroll={false}
           key={key}
         >
           {value[lang]}
-        </button>
+        </Link>
       ))}
-    </div>
-    <div className="grid project-grid" key={filter}>
+    </nav>
+    <div className="grid project-grid">
       {visible.map((project, index) => (
-        <ProjectCard key={project.slug} project={project} lang={lang} eager={index === 0}/>
+        <ProjectCard
+          key={project.slug}
+          project={project}
+          lang={lang}
+          eager={index === 0}
+          headingLevel={2}
+        />
       ))}
     </div>
-    <p className="result-count" aria-live="polite">{lang === "zh" ? `显示 ${visible.length} 个项目` : `${visible.length} projects shown`}</p>
+    <p className="result-count">{lang === "zh" ? `显示 ${visible.length} 个项目` : `${visible.length} projects shown`}</p>
   </>;
 }

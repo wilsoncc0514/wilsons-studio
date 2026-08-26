@@ -2,13 +2,22 @@
 
 import { useEffect, useState } from "react";
 import type { Locale } from "@/data/projects";
+import { themeColors } from "@/lib/theme";
+
+function applyTheme(dark: boolean) {
+  document.documentElement.classList.toggle("dark", dark);
+  const color = dark ? themeColors.dark : themeColors.light;
+  document
+    .querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')
+    .forEach((meta) => { meta.content = color; });
+}
 
 export function ThemeToggle({ lang }: { lang: Locale }) {
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
     const savedDark = localStorage.theme === "dark";
-    document.documentElement.classList.toggle("dark", savedDark);
+    applyTheme(savedDark);
     const frame = window.requestAnimationFrame(() => setDark(savedDark));
     return () => window.cancelAnimationFrame(frame);
   }, []);
@@ -27,7 +36,7 @@ export function ThemeToggle({ lang }: { lang: Locale }) {
       onClick={() => {
         const nextDark = !dark;
         setDark(nextDark);
-        document.documentElement.classList.toggle("dark", nextDark);
+        applyTheme(nextDark);
         localStorage.theme = nextDark ? "dark" : "light";
       }}
     >

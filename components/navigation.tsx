@@ -78,8 +78,8 @@ export function Navigation({ lang }: { lang: Locale }) {
   return <>
     <header className="nav">
       <div className="shell navin">
-        <Link className="brand" href={`/${lang}`} onClick={() => setOpen(false)}>Wilson’s Studio</Link>
-        <nav className="navlinks" aria-label="Main navigation">
+        <Link className="brand" href={`/${lang}`} onClick={() => setOpen(false)} translate="no">Wilson’s Studio</Link>
+        <nav className="navlinks" aria-label={lang === "zh" ? "主要导航" : "Main navigation"}>
           {items.map(([label, href]) => <Link className={active(href) ? "active" : ""} href={href} key={href} onClick={() => setOpen(false)}>{label}</Link>)}
         </nav>
         <div className="actions">

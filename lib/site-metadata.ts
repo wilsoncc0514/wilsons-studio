@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { themeColors } from "./theme";
 
 export const siteMetadata: Metadata = {
   title: {
@@ -25,7 +26,7 @@ export const siteViewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f7f7f5" },
-    { media: "(prefers-color-scheme: dark)", color: "#08090b" },
+    { media: "(prefers-color-scheme: light)", color: themeColors.light },
+    { media: "(prefers-color-scheme: dark)", color: themeColors.dark },
   ],
 };
