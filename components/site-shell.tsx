@@ -2,6 +2,7 @@ import type { Locale } from "@/data/projects";
 import { MotionEnhancer } from "./motion-enhancer";
 import { Navigation } from "./navigation";
 import { ProjectTransitions } from "./project-transition";
+import { MotionArt } from "./motion-art";
 
 export function Footer({ lang }: { lang: Locale }) {
   return (
@@ -16,7 +17,7 @@ export function Footer({ lang }: { lang: Locale }) {
 
 export function Shell({ lang, children }: { lang: Locale; children: React.ReactNode }) {
   return (
-    <ProjectTransitions><MotionEnhancer>
+    <ProjectTransitions><MotionArt/><MotionEnhancer>
       <a className="skip-link" href="#main-content">
         {lang === "zh" ? "跳到主要内容" : "Skip to main content"}
       </a>

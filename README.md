@@ -28,11 +28,13 @@ npm start
 
 ## 动效与修图对比
 
-首页的实时点云由 `components/motion-art.tsx` 绘制，支持鼠标响应、W / 球体变形和暂停。绘制上限为 30fps、1500 个点、1.5 倍像素比；移动端减少点数。离屏、切换后台和“减少动态效果”时停止连续绘制；Canvas 不可用时显示静态矢量封面。
+全站透明点云背景由 `components/motion-art.tsx` 绘制，无文字、卡片和底色，不接收点击。几何预计算，每帧仅提交两次路径绘制；桌面最多 840 点、24fps，画布不超过 90 万像素。首次短暂播放后停止，鼠标移动时短时响应；滚动、拖动、切换后台时停绘。触屏和“减少动态效果”模式显示静态 W；Canvas 不可用时显示静态矢量回退。
+
+滚轮和触控使用浏览器原生滚动，避免额外惯性与路由、锚点定位冲突。GSAP 继续负责入场、滚动联动和作品封面转场。
 
 作品卡片通过 `components/project-transition.tsx` 将封面连续展开到详情页。动画仅在普通站内导航时触发，支持键盘，保留新标签页打开行为；减少动态效果时直接导航。转场中断、窗口缩放及超时会清理临时图层。
 
-`components/image-comparison.tsx` 支持鼠标、触控、键盘方向键、Home / End 和重置。当前为明确标注的交互演示，不能作为真实修图成果。替换为真实案例时，在 `data/projects.ts` 的修图项目中配置：
+`components/image-comparison.tsx` 支持鼠标、触控、键盘方向键、Home / End 和重置。滑块使用原生输入并直接更新裁切变量，不在拖动时重渲染 React 图片组件。当前为明确标注的交互演示，不能作为真实修图成果。替换为真实案例时，在 `data/projects.ts` 的修图项目中配置：
 
 ```ts
 coverImage: "/images/projects/finished.webp",
@@ -41,7 +43,7 @@ comparison: { beforeSrc: "/images/projects/original.webp" },
 
 两张图应使用相同构图、尺寸和对齐位置；没有 `beforeSrc` 时组件会自动展示标注为 AI 生成素材的同图滤镜对比。首页优先展示第一个修图项目，修图详情页也包含对比组件。
 
-演示素材：`public/images/demos/cobalt-glass.webp`，由内置 ImageGen 生成并压缩为 WebP。提示词：无品牌钴蓝玻璃香水瓶、拉丝金属瓶盖与曲面金属片，暖色石灰岩，侧光、真实玻璃折射、商业静物摄影，横向 4:3；无文字、标识或水印。
+演示素材：`public/images/demos/cobalt-glass.webp`，由内置 ImageGen 生成并压缩为 WebP。`cobalt-glass-before.webp` 为相同素材的预计算饱和度、对比度和亮度变化，取代浏览器运行时 CSS 滤镜。提示词：无品牌钴蓝玻璃香水瓶、拉丝金属瓶盖与曲面金属片，暖色石灰岩，侧光、真实玻璃折射、商业静物摄影，横向 4:3；无文字、标识或水印。
 
 ## 修改邮箱
 

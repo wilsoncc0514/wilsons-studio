@@ -3,7 +3,6 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from "lenis";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useRef } from "react";
 
@@ -38,19 +37,6 @@ export function MotionEnhancer({ children }: MotionEnhancerProps) {
       (context) => {
         const { desktop, reduce } = context.conditions as MotionConditions;
         if (reduce) return;
-
-        const lenis = desktop
-          ? new Lenis({
-              anchors: { offset: -90 },
-              autoRaf: true,
-              lerp: 0.09,
-              smoothWheel: true,
-              stopInertiaOnNavigate: true,
-              wheelMultiplier: 0.9,
-            })
-          : null;
-
-        lenis?.on("scroll", ScrollTrigger.update);
 
         const intro = selectAll(
           ".hero .eyebrow, .hero h1, .hero p, .hero .cta, .pagehead > .eyebrow, .pagehead > h1, .pagehead > p",
@@ -181,8 +167,6 @@ export function MotionEnhancer({ children }: MotionEnhancerProps) {
         ScrollTrigger.refresh();
 
         return () => {
-          lenis?.off("scroll", ScrollTrigger.update);
-          lenis?.destroy();
           pointerCleanups.forEach((cleanup) => cleanup());
         };
       },
@@ -192,7 +176,7 @@ export function MotionEnhancer({ children }: MotionEnhancerProps) {
   }, { scope, dependencies: [pathname], revertOnUpdate: true });
 
   return (
-    <div ref={scope}>
+    <div className="site-content" ref={scope}>
       {children}
       <div className="scroll-progress" aria-hidden="true" />
     </div>
