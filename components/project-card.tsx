@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { ProjectLink } from "./project-transition";
 import { categoryNames, type Locale, type Project } from "@/data/projects";
 
 export function ProjectCard({ project, lang, eager = false, headingLevel = 3 }: { project: Project; lang: Locale; eager?: boolean; headingLevel?: 2 | 3 }) {
@@ -7,7 +7,7 @@ export function ProjectCard({ project, lang, eager = false, headingLevel = 3 }: 
   const category = categoryNames[project.category][lang];
 
   return (
-    <Link
+    <ProjectLink
       className="project"
       href={`/${lang}/portfolio/${project.slug}`}
       aria-label={`${title} — ${category}`}
@@ -20,6 +20,6 @@ export function ProjectCard({ project, lang, eager = false, headingLevel = 3 }: 
         </div>
         <span className="arrow" aria-hidden="true">↗</span>
       </div>
-    </Link>
+    </ProjectLink>
   );
 }

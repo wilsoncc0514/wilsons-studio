@@ -1,6 +1,6 @@
 export type Locale = "zh" | "en";
 export type LocalText = { zh: string; en: string };
-export type Project = { slug:string; title:LocalText; category:string; description:LocalText; tools:string[]; coverImage:string; galleryImages:string[]; year:string; content:{ background:LocalText; goal:LocalText; process:LocalText } };
+export type Project = { slug:string; title:LocalText; category:string; description:LocalText; tools:string[]; coverImage:string; galleryImages:string[]; comparison?: { beforeSrc: string }; year:string; content:{ background:LocalText; goal:LocalText; process:LocalText } };
 
 const categories = ["commercial-cover","photo-retouching","creative-tools"];
 const names = [

@@ -130,24 +130,6 @@ export function MotionEnhancer({ children }: MotionEnhancerProps) {
             );
           });
 
-          const detailImage = root.querySelector(".detailhero > img");
-          if (detailImage) {
-            gsap.fromTo(
-              detailImage,
-              { yPercent: -2, scale: 1.04 },
-              {
-                yPercent: 2,
-                scale: 1,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: detailImage,
-                  start: "top top+=80",
-                  end: "bottom top",
-                  scrub: 0.8,
-                },
-              },
-            );
-          }
         }
 
         gsap.to(root.querySelector(".scroll-progress"), {
