@@ -13,7 +13,7 @@ export function PortfolioGrid({ lang, filter }: { lang: Locale; filter: string }
     <nav className="filters" aria-label={lang === "zh" ? "作品分类" : "Project categories"}>
       <Link
         className={`chip ${filter === "all" ? "active" : ""}`}
-        href={portfolioPath}
+        href={{ pathname: portfolioPath, query: { category: "all" } }}
         aria-current={filter === "all" ? "page" : undefined}
         scroll={false}
       >
