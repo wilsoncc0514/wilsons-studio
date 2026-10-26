@@ -95,7 +95,7 @@ export function MotionEnhancer({ children }: MotionEnhancerProps) {
         );
 
         if (desktop) {
-          selectAll<HTMLElement>(".project").forEach((card) => {
+          selectAll<HTMLElement>('.project:not([data-transition="none"])').forEach((card) => {
             const image = card.querySelector("img");
             if (!image) return;
 

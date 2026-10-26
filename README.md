@@ -45,6 +45,14 @@ comparison: { beforeSrc: "/images/projects/original.webp" },
 
 演示素材：`public/images/demos/cobalt-glass.webp`，由内置 ImageGen 生成并压缩为 WebP。`cobalt-glass-before.webp` 为相同素材的预计算饱和度、对比度和亮度变化，取代浏览器运行时 CSS 滤镜。提示词：无品牌钴蓝玻璃香水瓶、拉丝金属瓶盖与曲面金属片，暖色石灰岩，侧光、真实玻璃折射、商业静物摄影，横向 4:3；无文字、标识或水印。
 
+## 创意工具过程演示
+
+首页的创意工具区与两个工具详情页共用 `components/creative-tool-demo.tsx`：配色演示观察、色板、应用三个步骤；情绪板演示收集、编排、方向三个步骤。内容与预设色板在 `data/tool-demos.ts`，作品通过 `data/projects.ts` 的 `demo` 字段选择 `palette` 或 `moodboard`。
+
+桌面首次进入视口时自动演示一次，使用两个定时器、总长 2.4 秒，无持续循环、无逐帧 JavaScript。可暂停、重播、手动选择步骤及预设方向；离屏、切换后台时取消待执行步骤。触屏与减少动态效果模式默认显示结果，手动操作仍然可用。静态卡片封面和交互原型共用 `components/tool-composition.tsx`。
+
+这些是有明确标注的概念原型，使用既有 AI 参考素材与固定色板，没有图片上传、自动取色或生成后端。替换真实工具功能前，应保留此说明。
+
 ## 修改邮箱
 
 在 `components/copy-email.tsx` 中修改 `email` 常量即可更新邮箱。联系内容已经合并至“关于我”页面，邮箱支持一键复制；旧的 `/contact` 地址会自动跳转到该区域。

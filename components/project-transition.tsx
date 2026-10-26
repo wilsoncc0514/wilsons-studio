@@ -17,7 +17,7 @@ export function ProjectTransitions({ children }: { children: ReactNode }) {
   const navigate = useCallback<Navigate>((anchor, href) => {
     active.current?.cleanup();
     const source = anchor.querySelector("img");
-    if (!source || !source.complete || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (anchor.dataset.transition === "none" || !source || !source.complete || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       router.push(href);
       return;
     }
