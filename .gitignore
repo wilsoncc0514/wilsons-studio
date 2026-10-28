@@ -15,7 +15,6 @@
 
 # local design review tools
 /.agents/
-/.engramory-memory/
 
 # next.js
 /.next/
