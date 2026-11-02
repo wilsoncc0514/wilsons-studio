@@ -22,6 +22,14 @@ export function Navigation({ lang }: { lang: Locale }) {
   ];
 
   useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 801px)");
+    const closeOnDesktop = () => { if (desktop.matches) setOpen(false); };
+    closeOnDesktop();
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => desktop.removeEventListener("change", closeOnDesktop);
+  }, []);
+
+  useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     const main = document.querySelector("main");
     const footer = document.querySelector("footer");

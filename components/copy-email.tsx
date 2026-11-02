@@ -6,17 +6,20 @@ import type { Locale } from "@/data/projects";
 const email = "wilsoncc0514@gmail.com";
 
 export function CopyEmail({ lang }: { lang: Locale }) {
-  const [copied, setCopied] = useState(false);
+  const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
+  const copied = status === "copied";
 
   useEffect(() => {
-    if (!copied) return;
-    const timer = window.setTimeout(() => setCopied(false), 1800);
+    if (status === "idle") return;
+    const timer = window.setTimeout(() => setStatus("idle"), 4000);
     return () => window.clearTimeout(timer);
-  }, [copied]);
+  }, [status]);
 
   async function copy() {
+    let success = false;
     try {
       await navigator.clipboard.writeText(email);
+      success = true;
     } catch {
       const input = document.createElement("textarea");
       input.value = email;
@@ -24,10 +27,15 @@ export function CopyEmail({ lang }: { lang: Locale }) {
       input.style.opacity = "0";
       document.body.appendChild(input);
       input.select();
-      document.execCommand("copy");
-      input.remove();
+      try {
+        success = document.execCommand("copy");
+      } catch {
+        success = false;
+      } finally {
+        input.remove();
+      }
     }
-    setCopied(true);
+    setStatus(success ? "copied" : "failed");
   }
 
   return <div className="email-row">
@@ -41,8 +49,8 @@ export function CopyEmail({ lang }: { lang: Locale }) {
     >
       <span aria-hidden="true">{copied ? "✓" : "⧉"}</span>
     </button>
-    <span className="sr-only" role="status" aria-live="polite">
-      {copied ? (lang === "zh" ? "邮箱已复制" : "Email copied") : ""}
+    <span className={status === "failed" ? "copy-feedback" : "sr-only"} role="status" aria-live="polite">
+      {copied ? (lang === "zh" ? "邮箱已复制" : "Email copied") : status === "failed" ? (lang === "zh" ? "复制失败，请手动选择邮箱复制。" : "Copy failed. Please select and copy the email address.") : ""}
     </span>
   </div>;
 }

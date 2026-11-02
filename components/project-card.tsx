@@ -12,13 +12,13 @@ export function ProjectCard({ project, lang, eager = false, headingLevel = 3 }: 
       className="project"
       data-transition={project.demo ? "none" : undefined}
       href={`/${lang}/portfolio/${project.slug}`}
-      aria-label={`${title} — ${category}`}
+      aria-label={`${title} — ${category}${project.demo ? (lang === "zh" ? "，概念演示" : ", concept demo") : (lang === "zh" ? "，占位素材" : ", placeholder imagery")}`}
     >
-      {project.demo ? <ToolComposition lang={lang} kind={project.demo} compact/> : <Image src={project.coverImage} alt={title} width={1200} height={900} loading={eager ? "eager" : "lazy"}/>}
+      {project.demo ? <ToolComposition lang={lang} kind={project.demo} compact/> : <Image src={project.coverImage} alt={title} width={1200} height={900} sizes="(max-width: 800px) 100vw, 50vw" loading={eager ? "eager" : "lazy"}/>}
       <div className="meta">
         <div>
           {headingLevel === 2 ? <h2>{title}</h2> : <h3>{title}</h3>}
-          <p>{category} · {project.year}</p>
+          <p>{category}{project.demo ? (lang === "zh" ? " · 概念演示" : " · Concept demo") : (lang === "zh" ? " · 占位素材" : " · Placeholder imagery")} · {project.year}</p>
         </div>
         <span className="arrow" aria-hidden="true">↗</span>
       </div>

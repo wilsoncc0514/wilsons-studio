@@ -31,6 +31,9 @@ main{overflow:hidden}.hero{min-height:92dvh;display:grid;align-items:center;padd
 .hero-study img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; }
 .hero-study > span { display: flex; justify-content: space-between; gap: 16px; margin-top: 12px; font-size: 12px; line-height: 1.5; color: var(--muted); }
 .hero-study:hover > span { color: var(--accent); }
+.copy-feedback { flex-basis: 100%; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.email-row:has(.copy-feedback:not(.sr-only)) { flex-wrap: wrap; }
+.project-placeholder-note { color: var(--muted); font-size: 14px; line-height: 1.6; }
 .featured-grid { align-items: start; gap: 48px 24px; }
 .featured-grid .project { padding: 0; border: 0; border-radius: 0; background: transparent; overflow: visible; }
 .featured-grid .project:before { display: none; }

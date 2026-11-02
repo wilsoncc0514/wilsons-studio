@@ -33,6 +33,7 @@ export default async function Detail({ params }: { params: Promise<{ lang: strin
           <div className="fact fact-tools"><small>{t.tools}</small><span>{project.tools.join(" · ")}</span></div>
         </div>
       </div>
+      {!project.demo && <p className="project-placeholder-note">{lang === "zh" ? "当前图片为占位素材，尚非实际作品展示。" : "Current images are placeholders, not finished work."}</p>}
       {project.category === "photo-retouching" && <section className="detail-comparison" aria-label={lang === "zh" ? "修图对比演示" : "Retouching comparison demo"}><ImageComparison lang={lang} afterSrc={project.coverImage} beforeSrc={project.comparison?.beforeSrc} title={project.title[lang]}/></section>}
       {project.demo && <section className="detail-tool-demo" aria-label={lang === "zh" ? "创意工具交互原型" : "Creative tool prototype"}><CreativeToolDemo lang={lang} kind={project.demo}/></section>}
       {stories.map(([title, copy]) => (
