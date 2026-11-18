@@ -12,9 +12,7 @@ export default async function Portfolio({ params }: { params: Promise<{ lang: st
   return (
     <>
       <header className="pagehead shell">
-        <div className="eyebrow">Selected archive</div>
         <h1>{t.portfolio}</h1>
-        <p>{t.portfolioIntro}</p>
       </header>
       <section className="shell section portfolio-section">
         <Suspense fallback={<PortfolioGrid lang={lang} filter="all"/>}>

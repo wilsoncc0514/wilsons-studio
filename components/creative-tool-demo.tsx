@@ -56,7 +56,7 @@ export function CreativeToolDemo({ lang, kind = "palette" }: { lang: Locale; kin
   const selectStep = (value: number) => { stop(); setStep(value); };
   return <article className="tool-demo" ref={root} data-step={step} data-kind={kind} data-playing={playing} aria-labelledby={`${id}-title`}>
     <header className="tool-demo-header">
-      <div><span className="tool-demo-label">{zh ? "交互原型" : "Interactive prototype"}</span><h3 id={`${id}-title`}>{copy.title}</h3></div>
+      <h3 id={`${id}-title`}>{copy.title}</h3>
       <button className="demo-play" type="button" aria-pressed={playing} onClick={playing ? stop : play}>{playing ? (zh ? "暂停演示" : "Pause") : (zh ? "播放过程" : "Play walkthrough")}<span aria-hidden="true">{playing ? " Ⅱ" : " ▷"}</span></button>
     </header>
     <div className="tool-demo-body">

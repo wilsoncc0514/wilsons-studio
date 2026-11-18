@@ -10,9 +10,7 @@ const content = {
     capabilities: "能力与方向",
     process: "我的创作方式",
     processItems: [["理解","梳理项目背景、受众和应用场景，明确真正需要解决的问题。"],["探索","通过情绪板、构图和生成实验，寻找最有潜力的视觉方向。"],["精修","统一光影、色彩与细节，让概念成为稳定、完整的视觉成果。"]],
-    contactTitle: "有合适的项目，欢迎联系。",
-    contactCopy: "无论是设计合作、视觉创作机会，还是关于创意与图像表达的交流，都欢迎发邮件给我。",
-    status: "开放合作机会",
+    contactTitle: "联系 Wilson",
   },
   en: {
     intro: "I’m Wilson, a visual creator focused on commercial visual design and Photoshop retouching. I look for the balance between imagination and clarity—making work that feels considered and performs in real communication and commercial settings.",
@@ -21,24 +19,22 @@ const content = {
     capabilities: "Focus & Capabilities",
     process: "How I Work",
     processItems: [["Understand","Clarify context, audience, and application to identify the real problem."],["Explore","Use moodboards, composition studies, and generation tests to find the strongest direction."],["Refine","Unify light, color, and detail until the concept becomes a reliable visual outcome."]],
-    contactTitle: "Have the right project in mind? Let’s talk.",
-    contactCopy: "For design collaborations, visual commissions, or a conversation about creative image-making, feel free to reach out by email.",
-    status: "Open to collaborations",
+    contactTitle: "Contact Wilson",
   }
 };
 
-const skills = ["Commercial Visual", "Photoshop Retouching", "Image Compositing", "Art Direction", "Creative Workflow"];
+const skills = {
+  zh: ["商业视觉设计", "Photoshop 修图", "图像合成", "视觉指导", "创意工作流程"],
+  en: ["Commercial visual design", "Photoshop retouching", "Image compositing", "Art direction", "Creative workflows"],
+};
 
 export default async function About({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const c = content[lang];
   return <>
-    <header className="pagehead about-head shell">
-      <div className="eyebrow">Wilson · Designer & Visual Creator</div>
+    <header className="pagehead shell">
       <h1>{ui[lang].about}</h1>
-      <p>{ui[lang].aboutTitle}</p>
-      <div className="about-orbit" aria-hidden="true"><span/><span/><strong>W</strong></div>
     </header>
 
     <section className="section shell about-intro">
@@ -47,17 +43,17 @@ export default async function About({ params }: { params: Promise<{ lang: string
     </section>
 
     <section className="section shell">
-      <div className="sectionhead"><div><div className="eyebrow">Expertise</div><h2>{c.capabilities}</h2></div><p className="sectiondesc">Wilson’s Studio · 2026</p></div>
-      <div className="skill-list">{skills.map((skill, i) => <div key={skill}><span>0{i + 1}</span><h3>{skill}</h3></div>)}</div>
+      <div className="sectionhead"><h2>{c.capabilities}</h2></div>
+      <ul className="skill-list">{skills[lang].map((skill) => <li key={skill}>{skill}</li>)}</ul>
     </section>
 
     <section className="section shell">
-      <div className="sectionhead"><div><div className="eyebrow">Process</div><h2>{c.process}</h2></div></div>
+      <div className="sectionhead"><h2>{c.process}</h2></div>
       <div className="process-grid">{c.processItems.map((item, i) => <article key={item[0]}><span>0{i + 1}</span><h3>{item[0]}</h3><p>{item[1]}</p></article>)}</div>
     </section>
 
     <section className="section shell" id="contact">
-      <div className="about-contact"><div><div className="status"><i/>{c.status}</div><h2>{c.contactTitle}</h2></div><div><p>{c.contactCopy}</p><CopyEmail lang={lang}/></div></div>
+      <div className="about-contact"><h2>{c.contactTitle}</h2><CopyEmail lang={lang}/></div>
     </section>
   </>;
 }

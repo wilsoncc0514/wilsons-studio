@@ -4,7 +4,7 @@ Wilson 的中英双语个人设计作品集，基于 Next.js App Router、TypeSc
 
 ## 安装与运行
 
-要求 Node.js 20.9 或更高版本。
+要求 Node.js 22.13 或更高版本。
 
 ```bash
 npm install
@@ -20,9 +20,9 @@ npm start
 
 ## 替换作品内容与图片
 
-作品数据统一存放在 `data/projects.ts`。每个项目包含 `slug`、双语标题、分类、描述、工具、封面、画廊、年份和项目说明。新增数据后，详情页会根据 `slug` 自动生成。
+作品数据统一存放在 `data/projects.ts`。项目通过 `slug` 生成详情页，可附双语说明和画廊。
 
-当前六个作品使用 `public/images/projects/placeholder-3.jpg` 至 `placeholder-8.jpg`。用相同文件名直接替换即可；若使用新文件名，请同步修改 `data/projects.ts` 内的 `coverImage` 和 `galleryImages`。
+四个商业视觉或修图项目仍展示占位封面；两个创意工具项目使用交互概念封面。拿到可公开发布的成品后，更新 `coverImage`、`galleryImages` 与项目说明，并清除该作品的 `placeholder` 标记。
 
 建议图片使用 JPG 或 WebP，封面保持 4:3 或 16:9，宽度至少 1600px。画廊图片可以使用不同宽高比。
 
@@ -30,7 +30,7 @@ npm start
 
 全站透明点云背景由 `components/motion-art.tsx` 绘制，无文字、卡片和底色，不接收点击。几何预计算，每帧仅提交两次路径绘制；桌面最多 840 点、24fps，画布不超过 90 万像素。首次短暂播放后停止，鼠标移动时短时响应；滚动、拖动、切换后台时停绘。触屏和“减少动态效果”模式显示静态 W；Canvas 不可用时显示静态矢量回退。
 
-滚轮和触控使用浏览器原生滚动，避免额外惯性与路由、锚点定位冲突。GSAP 继续负责入场、滚动联动和作品封面转场。
+滚轮和触控使用浏览器原生滚动。站点没有滚动入场、视差或跟随鼠标的卡片光效；GSAP 仅用于作品封面转场。
 
 作品卡片通过 `components/project-transition.tsx` 将封面连续展开到详情页。动画仅在普通站内导航时触发，支持键盘，保留新标签页打开行为；减少动态效果时直接导航。转场中断、窗口缩放及超时会清理临时图层。
 
@@ -41,7 +41,7 @@ coverImage: "/images/projects/finished.webp",
 comparison: { beforeSrc: "/images/projects/original.webp" },
 ```
 
-两张图应使用相同构图、尺寸和对齐位置；没有 `beforeSrc` 时组件会自动展示标注为 AI 生成素材的同图滤镜对比。首页优先展示第一个修图项目，修图详情页也包含对比组件。
+两张图应使用相同构图、尺寸和对齐位置。首页优先展示已配置素材的修图项目，否则显示标注为 AI 生成的模拟对比；没有配对素材的详情页只链接到独立演示，不把模拟图嵌入为案例。
 
 演示素材：`public/images/demos/cobalt-glass.webp`，由内置 ImageGen 生成并压缩为 WebP。`cobalt-glass-before.webp` 为相同素材的预计算饱和度、对比度和亮度变化，取代浏览器运行时 CSS 滤镜。提示词：无品牌钴蓝玻璃香水瓶、拉丝金属瓶盖与曲面金属片，暖色石灰岩，侧光、真实玻璃折射、商业静物摄影，横向 4:3；无文字、标识或水印。
 
@@ -57,14 +57,9 @@ comparison: { beforeSrc: "/images/projects/original.webp" },
 
 在 `components/copy-email.tsx` 中修改 `email` 常量即可更新邮箱。联系内容已经合并至“关于我”页面，邮箱支持一键复制；旧的 `/contact` 地址会自动跳转到该区域。
 
-## 部署到 Vercel
+## 部署
 
-1. 将项目上传到 GitHub、GitLab 或 Bitbucket。
-2. 登录 Vercel，选择 **Add New → Project** 并导入仓库。
-3. Vercel 会自动识别 Next.js；无需数据库或环境变量。
-4. 点击 **Deploy**。后续推送到主分支会自动重新部署。
-
-也可以安装 Vercel CLI 后在项目目录执行 `vercel`。部署完成后，请把 `app/layout.tsx` 中 `metadataBase` 的示例地址替换为正式域名。
+现有站点使用 OpenAI Sites。运行 `npm run build:sites` 生成 `dist/`，其中包含 OpenNext Worker 和静态资源。沿用 `.openai/hosting.json` 声明的站点及既有访问范围，以同一份源码和构建产物创建新版本。切换域名前，在 `lib/site-metadata.ts` 核对正式分享域名。
 
 ## 主要目录
 

@@ -42,6 +42,6 @@ export function PortfolioGrid({ lang, filter }: { lang: Locale; filter: string }
         />
       ))}
     </div>
-    <p className="result-count">{lang === "zh" ? `显示 ${visible.length} 个项目` : `${visible.length} projects shown`}</p>
+    <p className="sr-only" role="status">{lang === "zh" ? `显示 ${visible.length} 个项目` : `${visible.length} projects shown`}</p>
   </>;
 }

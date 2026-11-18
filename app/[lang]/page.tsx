@@ -1,12 +1,76 @@
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import { CreativeToolDemo } from "@/components/creative-tool-demo";
 import { ImageComparison } from "@/components/image-comparison";
-import Image from "next/image";
-import Link from "next/link"; import { notFound } from "next/navigation"; import { ProjectCard } from "@/components/project-card"; import { projects } from "@/data/projects"; import { isLocale,ui } from "@/lib/i18n";
-const caps={zh:[["商业视觉设计","为品牌封面、活动与传播场景建立清晰有力的视觉表达。"],["Photoshop 修图","专注人物、产品的质感优化、图像合成与精细化处理。"],["图像合成","通过素材整合、光影统一和细节控制，完成可信的视觉场景。"],["创意工具","探索更高效、更稳定的数字化设计与创作流程。"]],en:[["Commercial Visual Design","Clear, expressive visual systems for brands, campaigns, and key moments."],["Photo Retouching","Detailed portrait and product retouching, compositing, and finish refinement."],["Image Compositing","Building believable visual scenes through controlled light, detail, and integration."],["Creative Tools","Exploring efficient and reliable digital workflows for visual creation."]]};
-export default async function Home({params}:{params:Promise<{lang:string}>}){const {lang}=await params;if(!isLocale(lang))notFound();const t=ui[lang];const retouch=projects.find(project=>project.category==="photo-retouching");return <>
-<section className="hero hero-background shell"><div className="hero-copy"><div className="eyebrow">Wilson · Visual Creator</div><h1>{lang==="zh"?<>商业视觉与图像精修，<br/><em>让想法成为好作品。</em></>:<>Visual design.<br/><em>Images, thoughtfully finished.</em></>}</h1><p>{lang==="zh"?"我是 Wilson，专注商业视觉设计与 Photoshop 精修。这里有我的封面设计、图像处理与创意工具概念，欢迎浏览作品，或聊聊你的项目。":"I’m Wilson, a visual designer working across commercial design and Photoshop retouching. Explore cover designs, image studies, and creative tool concepts, or get in touch about a project."}</p><div className="cta"><Link className="button" href={`/${lang}/portfolio?category=all`}>{lang==="zh"?"查看作品":"Explore the work"} ↗</Link><Link className="button ghost" href={`/${lang}/about#contact`}>{lang==="zh"?"聊聊你的项目":"Discuss a project"}</Link></div><nav className="hero-services" aria-label={lang==="zh"?"按服务浏览":"Explore by service"}><Link href={`/${lang}/portfolio?category=commercial-cover`}>{lang==="zh"?"商业视觉":"Visual design"}</Link><Link href={`/${lang}/portfolio?category=photo-retouching`}>{lang==="zh"?"图像精修":"Retouching"}</Link><a href="#creative-tools">{lang==="zh"?"创意工具":"Creative tools"}</a></nav></div><a className="hero-study" href="#retouch-demo"><Image src="/images/demos/cobalt-glass.webp" alt="" width={1440} height={1080} priority sizes="(max-width: 800px) 100vw, 35vw"/><span>{lang==="zh"?"图像质感演示 · AI 生成素材":"Image study · AI-generated material"}<span aria-hidden="true">↘</span></span></a></section>
-<section className="section shell featured-work"><div className="sectionhead"><div><div className="eyebrow">Portfolio</div><h2>{t.work}</h2></div><p className="sectiondesc">{t.workDesc}<span className="work-note">{lang==="zh"?"个人概念项目与视觉练习，部分图像为演示素材。":"Personal concepts and visual studies. Some imagery is demonstrative."}</span></p></div><div className="grid featured-grid">{[projects[5],...projects.slice(0,4)].map((p,i)=><ProjectCard key={p.slug} project={p} lang={lang} eager={i===0}/>)}</div></section>
-{retouch && <section className="section shell retouch-showcase" id="retouch-demo"><div className="sectionhead"><div><div className="eyebrow">Image / Craft</div><h2>{lang==="zh"?"让变化，清晰可见。":"See the difference."}</h2></div><p className="sectiondesc">{lang==="zh"?"拖动分割线，探索图像的色彩与质感。键盘方向键也可调整。":"Move the divider to explore color and texture. Arrow keys work, too."}</p></div><ImageComparison lang={lang} afterSrc={retouch.coverImage} beforeSrc={retouch.comparison?.beforeSrc} title={retouch.title[lang]}/>{retouch.comparison && <Link className="comparison-project-link" href={`/${lang}/portfolio/${retouch.slug}`}>{lang==="zh"?"查看项目":"Explore the project"} <span aria-hidden="true">↗</span></Link>}</section>}
-<section className="section shell creative-showcase" id="creative-tools"><div className="sectionhead"><div><h2>{lang==="zh"?"把过程，也展示出来。":"See how the idea takes shape."}</h2></div><p className="sectiondesc">{lang==="zh"?"创意工具概念的交互演示。切换步骤，看看素材、色板与版式怎样联系起来。":"An interactive look at a creative tool concept. Step through the relationship between reference, palette, and composition."}</p></div><CreativeToolDemo lang={lang} kind="palette"/><Link className="comparison-project-link" href={`/${lang}/portfolio?category=creative-tools`}>{lang==="zh"?"查看创意工具作品":"Explore creative tool projects"} <span aria-hidden="true">↗</span></Link></section>
-<section className="section shell"><div className="sectionhead"><div><div className="eyebrow">Capabilities</div><h2>{t.skills}</h2></div></div><div className="capgrid">{caps[lang].map((c,i)=><article className="cap" key={c[0]}><span className="capnum">0{i+1}</span><div><h3>{c[0]}</h3><p>{c[1]}</p></div></article>)}</div></section>
-<section className="section shell"><div className="aboutband"><div><div className="eyebrow">About</div><h2>{t.aboutWilson}</h2></div><div><p>{t.aboutShort}</p><div className="cta"><Link className="button ghost" href={`/${lang}/about`}>{t.about} ↗</Link><Link className="button" href={`/${lang}/about#contact`}>{t.contactMe}</Link></div></div></div></section></>}
+import { ProjectCard } from "@/components/project-card";
+import { projects } from "@/data/projects";
+import { isLocale, ui } from "@/lib/i18n";
+
+const caps = {
+  zh: [
+    ["商业视觉设计", "品牌封面、活动与传播视觉"],
+    ["Photoshop 修图", "人像与产品精修"],
+    ["图像合成", "素材整合、光影统一与细节处理"],
+    ["创意工具", "色板、情绪板与数字创作流程"],
+  ],
+  en: [
+    ["Commercial visual design", "Campaign covers, events, and brand communications"],
+    ["Photo retouching", "Portrait and product finishing"],
+    ["Image compositing", "Image integration, lighting, and detail"],
+    ["Creative tools", "Palettes, moodboards, and digital workflows"],
+  ],
+};
+
+export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang } = await params;
+  if (!isLocale(lang)) notFound();
+  const zh = lang === "zh";
+  const t = ui[lang];
+  const retouch = projects.find((project) => project.category === "photo-retouching" && project.comparison);
+  const featured = [
+    ...projects.filter((project) => project.demo === "palette"),
+    ...projects.filter((project) => !project.demo),
+  ];
+
+  return <>
+    <section className="hero hero-background shell">
+      <div className="hero-copy">
+        <h1>{zh ? "商业视觉与图像精修" : "Visual design and photo retouching"}</h1>
+        <div className="cta">
+          <Link className="button" href={`/${lang}/portfolio?category=all`}>{zh ? "查看作品" : "View work"}</Link>
+          <Link className="button ghost" href={`/${lang}/about#contact`}>{t.contactMe}</Link>
+        </div>
+      </div>
+      <a className="hero-study" href="#retouch-demo">
+        <Image src="/images/demos/cobalt-glass.webp" alt="" width={1440} height={1080}
+          loading="eager" fetchPriority="high" sizes="(max-width: 800px) 100vw, (max-width: 1240px) 37vw, 450px"/>
+        <span>{zh ? "修图对比 · AI 演示素材" : "Retouching comparison · AI-generated sample"}<span aria-hidden="true">↘</span></span>
+      </a>
+    </section>
+    <section className="section shell featured-work">
+      <div className="sectionhead"><h2>{t.work}</h2><Link className="text-link" href={`/${lang}/portfolio?category=all`}>{t.viewAll}</Link></div>
+      <div className="grid featured-grid">{featured.map((project) => <ProjectCard key={project.slug} project={project} lang={lang}/>)}</div>
+    </section>
+    <section className="section shell retouch-showcase" id="retouch-demo">
+      <div className="sectionhead"><h2>{zh ? "修图对比" : "Retouching comparison"}</h2></div>
+      <ImageComparison lang={lang} afterSrc={retouch?.coverImage} beforeSrc={retouch?.comparison?.beforeSrc} title={retouch?.title[lang]}/>
+      {retouch && <Link className="comparison-project-link" href={`/${lang}/portfolio/${retouch.slug}`}>{zh ? "查看对应项目" : "View the project"}</Link>}
+    </section>
+    <section className="section shell creative-showcase" id="creative-tools">
+      <div className="sectionhead"><h2>{zh ? "创意工具" : "Creative tools"}</h2></div>
+      <CreativeToolDemo lang={lang} kind="palette"/>
+      <Link className="comparison-project-link" href={`/${lang}/portfolio?category=creative-tools`}>{zh ? "查看创意工具作品" : "View creative tool projects"}</Link>
+    </section>
+    <section className="section shell">
+      <div className="sectionhead"><h2>{t.skills}</h2></div>
+      <div className="capgrid">{caps[lang].map(([title, description]) => <article className="cap" key={title}><h3>{title}</h3><p>{description}</p></article>)}</div>
+    </section>
+    <section className="section shell">
+      <div className="aboutband"><h2>{t.aboutWilson}</h2><div>
+        <p>{zh ? "Wilson 从事商业视觉设计、Photoshop 精修与图像合成。" : "Wilson works across commercial visual design, Photoshop retouching, and image compositing."}</p>
+        <div className="cta"><Link className="text-link" href={`/${lang}/about`}>{t.about}</Link><Link className="button" href={`/${lang}/about#contact`}>{t.contactMe}</Link></div>
+      </div></div>
+    </section>
+  </>;
+}

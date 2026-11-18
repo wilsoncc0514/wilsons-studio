@@ -9,9 +9,9 @@ import { ThemeToggle } from "./theme-toggle";
 
 export function Navigation({ lang }: { lang: Locale }) {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const [openPath, setOpenPath] = useState<string | null>(null);
+  const open = openPath === pathname;
+  const toggle = useRef<HTMLButtonElement>(null);
   const t = ui[lang];
   const other = lang === "zh" ? "en" : "zh";
   const otherPath = pathname.replace(/^\/(zh|en)(?=\/|$)/, `/${other}`);
@@ -22,100 +22,52 @@ export function Navigation({ lang }: { lang: Locale }) {
   ];
 
   useEffect(() => {
-    const desktop = window.matchMedia("(min-width: 801px)");
-    const closeOnDesktop = () => { if (desktop.matches) setOpen(false); };
-    closeOnDesktop();
-    desktop.addEventListener("change", closeOnDesktop);
-    return () => desktop.removeEventListener("change", closeOnDesktop);
+    const desktop = window.matchMedia("(width > 800px)");
+    const close = () => { if (desktop.matches) setOpenPath(null); };
+    desktop.addEventListener("change", close);
+    return () => desktop.removeEventListener("change", close);
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    const main = document.querySelector("main");
-    const footer = document.querySelector("footer");
-    const focusTimer = open
-      ? window.setTimeout(() => {
-          mobileMenuRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
-        }, 100)
-      : undefined;
-
-    if (open) {
-      main?.setAttribute("inert", "");
-      footer?.setAttribute("inert", "");
-    } else {
-      main?.removeAttribute("inert");
-      footer?.removeAttribute("inert");
-    }
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (!open) return;
-      if (event.key === "Escape") {
-        setOpen(false);
-        menuButtonRef.current?.focus();
-        return;
-      }
-      if (event.key !== "Tab") return;
-
-      const focusable = Array.from(
-        document.querySelectorAll<HTMLElement>(".nav a, .nav button, .mobile-menu a")
-      ).filter((element) => element.getClientRects().length > 0);
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last?.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first?.focus();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = "";
-      main?.removeAttribute("inert");
-      footer?.removeAttribute("inert");
-      if (focusTimer !== undefined) window.clearTimeout(focusTimer);
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    if (!open) return;
+    const close = () => setOpenPath(null);
+    window.addEventListener("popstate", close);
+    return () => window.removeEventListener("popstate", close);
   }, [open]);
 
-  const active = (href: string) => href === `/${lang}` ? pathname === href : pathname.startsWith(href);
+  const links = items.map(([label, href]) => {
+    const current = pathname === href;
+    const active = current || pathname.startsWith(`${href}/`) && href !== `/${lang}`;
+    return <Link key={href} href={href} className={active ? "active" : undefined}
+      aria-current={current ? "page" : undefined} onClick={() => setOpenPath(null)}>{label}</Link>;
+  });
 
-  return <>
-    <header className="nav">
+  return (
+    <header className="nav"
+      onBlur={(event) => {
+        if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) setOpenPath(null);
+      }}
+      onKeyDown={(event) => {
+        if (open && event.key === "Escape") {
+          setOpenPath(null);
+          toggle.current?.focus();
+        }
+      }}>
       <div className="shell navin">
-        <Link className="brand" href={`/${lang}`} onClick={() => setOpen(false)} translate="no">Wilson’s Studio</Link>
-        <nav className="navlinks" aria-label={lang === "zh" ? "主要导航" : "Main navigation"}>
-          {items.map(([label, href]) => <Link className={active(href) ? "active" : ""} href={href} key={href} onClick={() => setOpen(false)}>{label}</Link>)}
-        </nav>
+        <Link className="brand" href={`/${lang}`} onClick={() => setOpenPath(null)} translate="no">Wilson’s Studio</Link>
+        <nav className="navlinks" aria-label={lang === "zh" ? "主要导航" : "Main navigation"}>{links}</nav>
         <div className="actions">
           <ThemeToggle lang={lang} />
-          <Link className="lang" href={otherPath} onClick={() => setOpen(false)}>{other.toUpperCase()}</Link>
-          <button
-            ref={menuButtonRef}
-            className={`menu-button ${open ? "open" : ""}`}
-            onClick={() => setOpen(value => !value)}
-            aria-expanded={open}
-            aria-controls="mobile-navigation"
-            aria-label={open ? (lang === "zh" ? "关闭菜单" : "Close menu") : (lang === "zh" ? "打开菜单" : "Open menu")}
-          >
-            <span/><span/>
+          <Link className="lang" href={otherPath} hrefLang={other === "zh" ? "zh-CN" : "en"} lang={other === "zh" ? "zh-CN" : "en"} aria-label={other === "zh" ? "切换至中文" : "Switch to English"}>{other.toUpperCase()}</Link>
+          <button ref={toggle} type="button" className="menu-button" onClick={() => setOpenPath(open ? null : pathname)}
+            aria-expanded={open} aria-controls="mobile-navigation" aria-label={open ? (lang === "zh" ? "关闭菜单" : "Close menu") : (lang === "zh" ? "打开菜单" : "Open menu")}>
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+              <path d={open ? "m6 6 12 12M18 6 6 18" : "M4 8h16M4 16h16"}/>
+            </svg>
           </button>
         </div>
       </div>
+      <nav id="mobile-navigation" className="mobile-menu shell" hidden={!open} aria-label={lang === "zh" ? "主要导航" : "Main navigation"}>{links}</nav>
     </header>
-    <div
-      ref={mobileMenuRef}
-      id="mobile-navigation"
-      className={`mobile-menu ${open ? "open" : ""}`}
-      role="dialog"
-      aria-modal={open}
-      aria-label={lang === "zh" ? "移动导航" : "Mobile navigation"}
-      aria-hidden={!open}
-    >
-      <nav>{items.map(([label, href], i) => <Link className={active(href) ? "active" : ""} href={href} key={href} onClick={() => setOpen(false)}>{label}<span>0{i + 1}</span></Link>)}</nav>
-    </div>
-  </>;
+  );
 }
